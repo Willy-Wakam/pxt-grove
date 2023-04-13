@@ -829,7 +829,7 @@ namespace grove {
         while (isWifiConnected && retry > 0) {
             retry = retry - 1;
             // establish TCP connection
-            sendAtCmd("AT+CIPSTART=\"TCP\",\""+apiKey+"\",8080")
+            sendAtCmd("AT+CIPSTART=\"TCP\",\""+apiUrl+"\","+apiPort)
             result = waitAtResponse("OK", "ALREADY CONNECTED", "ERROR", 2000)
             if (result == 3) continue
 
