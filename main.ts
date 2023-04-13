@@ -815,8 +815,8 @@ namespace grove {
     //% block="Send Data to your Api Channel|Username %apiKey|URL %apiUrl|Port %apiPort|ID %label|Measurement %measurement|Field1 %field1|"
     //% group="UartWiFi"
     //% apiKey.defl="your username"
-    //% apiUrl.defl="API URL"
-    export function sendToApi(apiKey: string, apiUrl:string, apiPort:string, label:string, measurement:Measurement, field1: number) {
+    //% apiUrl.defl="URL"
+    export function sendToApi(userName: string, apiUrl:string, apiPort:string, label:string, measurement:Measurement, field1: number) {
         let result = 0
         let retry = 2
 
@@ -833,9 +833,9 @@ namespace grove {
             result = waitAtResponse("OK", "ALREADY CONNECTED", "ERROR", 2000)
             if (result == 3) continue
 
-            let data = "GET /update?api_key=" + apiKey
+            let data = "GET /update?api_key=" + userName
             if (!isNaN(field1)) data = data + "&field1=" + field1
-            data = data + "&label=" + label + "&username=" + apiKey + "&measurement="+ measurementToString(measurement);
+            data = data + "&label=" + label + "&username=" + userName + "&measurement="+ measurementToString(measurement);
 
             sendAtCmd("AT+CIPSEND=" + (data.length + 2))
             result = waitAtResponse(">", "OK", "ERROR", 2000)
