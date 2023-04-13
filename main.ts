@@ -816,7 +816,7 @@ namespace grove {
     //% group="UartWiFi"
     //% apiKey.defl="your username"
     //% apiUrl.defl="API URL"
-    export function sendToApi(apiKey: string, apiUrl:string, apiPort:string, label:string, measurement:Measurement, field1: number, field2: number, field3: number, field4: number, field5: number, field6: number, field7: number, field8: number) {
+    export function sendToApi(apiKey: string, apiUrl:string, apiPort:string, label:string, measurement:Measurement, field1: number) {
         let result = 0
         let retry = 2
 
