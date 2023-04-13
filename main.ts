@@ -60,6 +60,22 @@ enum GroveGesture {
     Wave = 9
 }
 
+enum Measurement {
+    Licht,
+    Temperatur,
+    CO2,
+    Bodenfeuchtigkeit,
+    Abstand
+}
+
+function measurementToString(m : Measurement){
+    if(m == Measurement.Licht) return "light";
+    if(m == Measurement.Abstand) return "distance";
+    if(m == Measurement.Bodenfeuchtigkeit) return "moisture";
+    if(m == Measurement.Temperatur) return "temp";
+    if(m == Measurement.CO2) return "co2";
+}
+
 enum GroveJoystickKey {
     //% block="None"
     None = 0,
@@ -775,6 +791,51 @@ namespace grove {
             // if (!isNaN(field6)) data = data + "&field6=" + field6
             // if (!isNaN(field7)) data = data + "&field7=" + field7
             if (!isNaN(field8)) data = data + "&field8=" + field8
+
+            sendAtCmd("AT+CIPSEND=" + (data.length + 2))
+            result = waitAtResponse(">", "OK", "ERROR", 2000)
+            if (result == 3) continue
+            sendAtCmd(data)
+            result = waitAtResponse("SEND OK", "SEND FAIL", "ERROR", 5000)
+
+            // // close the TCP connection
+            // sendAtCmd("AT+CIPCLOSE")
+            // waitAtResponse("OK", "ERROR", "None", 2000)
+
+            if (result == 1) break
+        }
+    }
+
+
+
+
+     /**
+     * Send data to api
+     */
+    //% block="Send Data to your Api Channel|Username %apiKey|URL %apiUrl|Port %apiPort|ID %label|Measurement %measurement|Field1 %field1|"
+    //% group="UartWiFi"
+    //% apiKey.defl="your username"
+    //% apiUrl.defl="API URL"
+    export function sendToApi(apiKey: string, apiUrl:string, apiPort:string, label:string, measurement:Measurement, field1: number, field2: number, field3: number, field4: number, field5: number, field6: number, field7: number, field8: number) {
+        let result = 0
+        let retry = 2
+
+        // close the previous TCP connection
+        if (isWifiConnected) {
+            sendAtCmd("AT+CIPCLOSE")
+            waitAtResponse("OK", "ERROR", "None", 2000)
+        }
+
+        while (isWifiConnected && retry > 0) {
+            retry = retry - 1;
+            // establish TCP connection
+            sendAtCmd("AT+CIPSTART=\"TCP\",\""+apiKey+"\",8080")
+            result = waitAtResponse("OK", "ALREADY CONNECTED", "ERROR", 2000)
+            if (result == 3) continue
+
+            let data = "GET /update?api_key=" + apiKey
+            if (!isNaN(field1)) data = data + "&field1=" + field1
+            data = data + "&label=" + label + "&username=" + apiKey + "&measurement="+ measurementToString(measurement);
 
             sendAtCmd("AT+CIPSEND=" + (data.length + 2))
             result = waitAtResponse(">", "OK", "ERROR", 2000)
