@@ -813,11 +813,11 @@ namespace grove {
      /**
      * Send data to api
      */
-    //% block="Send Data to your Api Channel|Username %apiKey|URL %apiUrl|Port %apiPort|ID %label|Measurement %measurement|Field1 %field1|"
+    //% block="Send Data to your Api Channel|Username %apiKey|ID %label|Measurement %measurement|Field1 %field1|"
     //% group="UartWiFi"
-    //% apiKey.defl="your username"
-    //% apiUrl.defl="URL"
-    export function sendToApi(userName: string, apiUrl:string, apiPort:string, label:string, measurement:Measurement, field1: number) {
+    export function sendToApi(userName: string, label:string, measurement:Measurement, field1: number) {
+        let apiUrl = "brian-moser.de"
+        let apiPort = "9091"
         let result = 0
         let retry = 2
 
