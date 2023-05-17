@@ -813,7 +813,7 @@ namespace grove {
      /**
      * Send data to api
      */
-    //% block="Send Data to your Api Channel|Username %apiKey|ID %label|Measurement %measurement|Field1 %field1|"
+    //% block="Schicke Daten an Grafana|Nutzer %apiKey|ID %label|Messung %measurement|Messwert %field1|"
     //% group="UartWiFi"
     export function sendToApi(userName: string, label:string, measurement:Measurement, field1: number) {
         let apiUrl = "brian-moser.de"
