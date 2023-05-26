@@ -811,7 +811,7 @@ namespace grove {
 
 
      /**
-     * Send data to api
+     * Send data to Grafana an brian-moser.de Server
      */
     //% block="Schicke Daten an Grafana|Nutzer %apiKey|ID %label|Messung %measurement|Messwert %field1|"
     //% group="UartWiFi"
@@ -859,6 +859,103 @@ namespace grove {
             if (result == 1) break
         }
     }
+
+    /**
+     * Send data to Grafana with custom URL and port
+     */
+    //% block="Schicke an Grafana Custom|Username %apiKey|URL %apiUrl|Port %apiPort|ID %label|Measurement %measurement|Field1 %field1|"
+    //% group="UartWiFi"
+    export function sendToGrafana(userName: string, apiUrl:string, apiPort:string, label:string, measurement:Measurement, field1: number) {
+        let result = 0
+        let retry = 2
+
+        // close the previous TCP connection
+        if (isWifiConnected) {
+            sendAtCmd("AT+CIPCLOSE")
+            waitAtResponse("OK", "ERROR", "None", 2000)
+        }
+
+        while (isWifiConnected && retry > 0) {
+            retry = retry - 1;
+            // establish TCP connection
+            sendAtCmd("AT+CIPSTART=\"TCP\",\""+apiUrl+"\","+apiPort)
+            result = waitAtResponse("OK", "ALREADY CONNECTED", "ERROR", 2000)
+            if (result == 3) continue
+
+            let data = "GET /update?api_key=" + userName
+            if (!isNaN(field1)) data = data + "&field1=" + field1
+            data = data + "&label=" + label + "&username=" + userName + "&measurement="+ measurementToString(measurement);
+            data = data + " HTTP/1.1"
+            data = data + "\u000D\u000A"
+            data = data + "User-Agent: curl/7.58.0"
+            data = data + "\u000D\u000A"
+            data = data + "Host: "+apiUrl
+            data = data + "\u000D\u000A"
+            data = data + "Accept: */*"
+            data = data + "\u000D\u000A"
+
+            sendAtCmd("AT+CIPSEND=" + (data.length + 2))
+            result = waitAtResponse(">", "OK", "ERROR", 2000)
+            if (result == 3) continue
+            sendAtCmd(data)
+            result = waitAtResponse("SEND OK", "SEND FAIL", "ERROR", 5000)
+
+            // // close the TCP connection
+            // sendAtCmd("AT+CIPCLOSE")
+            // waitAtResponse("OK", "ERROR", "None", 2000)
+
+            if (result == 1) break
+        }
+    }
+
+        /**
+     * Send data to Grafana with API Key
+     */
+    //% block="Schicke an Grafana with API Key|API KEY %apiKey|URL %apiUrl|Port %apiPort|ID %label|Field1 %field1|"
+    //% group="UartWiFi"
+    export function sendToGrafanaWithKey(userName: string, apiUrl:string, apiPort:string, label:string, field1: number) {
+        let result = 0
+        let retry = 2
+
+        // close the previous TCP connection
+        if (isWifiConnected) {
+            sendAtCmd("AT+CIPCLOSE")
+            waitAtResponse("OK", "ERROR", "None", 2000)
+        }
+
+        while (isWifiConnected && retry > 0) {
+            retry = retry - 1;
+            // establish TCP connection
+            sendAtCmd("AT+CIPSTART=\"TCP\",\""+apiUrl+"\","+apiPort)
+            result = waitAtResponse("OK", "ALREADY CONNECTED", "ERROR", 2000)
+            if (result == 3) continue
+
+            let data = "GET /update?api_key=" + userName
+            if (!isNaN(field1)) data = data + "&field1=" + field1
+            data = data + "&label=" + label + "&apikey=" + userName;
+            data = data + " HTTP/1.1"
+            data = data + "\u000D\u000A"
+            data = data + "User-Agent: curl/7.58.0"
+            data = data + "\u000D\u000A"
+            data = data + "Host: "+apiUrl
+            data = data + "\u000D\u000A"
+            data = data + "Accept: */*"
+            data = data + "\u000D\u000A"
+
+            sendAtCmd("AT+CIPSEND=" + (data.length + 2))
+            result = waitAtResponse(">", "OK", "ERROR", 2000)
+            if (result == 3) continue
+            sendAtCmd(data)
+            result = waitAtResponse("SEND OK", "SEND FAIL", "ERROR", 5000)
+
+            // // close the TCP connection
+            // sendAtCmd("AT+CIPCLOSE")
+            // waitAtResponse("OK", "ERROR", "None", 2000)
+
+            if (result == 1) break
+        }
+    }
+
 
     /**
      * Send data to IFTTT
