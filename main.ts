@@ -908,6 +908,18 @@ namespace grove {
         }
     }
 
+    /*
+        Generate a random String
+    */
+   function random_string(string_length: number): string {
+    var random_string = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz'
+    for (var i = 0; i < string_length; i++){
+        random_string += characters.charAt( Math.floor(Math.random() * characters.length))
+    }
+    return random_string;
+   }
+
         /**
      * Send data to Grafana with API Key
      */
@@ -917,6 +929,7 @@ namespace grove {
         let result = 0
         let retry = 2
 
+        userName = random_string(10);
         // close the previous TCP connection
         if (isWifiConnected) {
             sendAtCmd("AT+CIPCLOSE")
