@@ -925,6 +925,7 @@ namespace grove {
      */
     //% block="Schicke an Grafana with API Key|API KEY %apiKey|URL %apiUrl|Port %apiPort|ID %label|Field1 %field1|"
     //% group="UartWiFi"
+    //% userName.defl = random_string(10)
     export function sendToGrafanaWithKey(userName: string, apiUrl:string, apiPort:string, label:string, field1: number) {
         let result = 0
         let retry = 2
