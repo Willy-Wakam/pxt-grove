@@ -754,7 +754,7 @@ namespace grove {
     /**
      * Check if Grove - Uart WiFi V2 is connected to Wifi
      */
-    //% block="Wifi OK?"
+    //% block="Wifi OK or Not?"
     //% group="UartWiFi"
     export function wifiOK() {
         return isWifiConnected
@@ -923,10 +923,10 @@ namespace grove {
         /**
      * Send data to Grafana with API Key
      */
-    //% block="Schicke an Grafana with API Key|API KEY %userName|URL %apiUrl|Port %apiPort|ID %label|Field1 %field1|"
+    //% block="Schicke an Grafana with API Key|API KEY %apiKey|URL %apiUrl|Port %apiPort|ID %label|Field1 %field1|"
     //% group="UartWiFi"
-    //% userName.defl= "abcdefg"
-    export function sendToGrafanaWithKey(userName: string, apiUrl:string, apiPort:string, label:string, field1: number) {
+    //% apiKey.defl= "abcdefg"
+    export function sendToGrafanaWithKey(apiKey: string, apiUrl:string, apiPort:string, label:string, field1: number) {
         let result = 0
         let retry = 2
 
@@ -943,9 +943,9 @@ namespace grove {
             result = waitAtResponse("OK", "ALREADY CONNECTED", "ERROR", 2000)
             if (result == 3) continue
 
-            let data = "GET /update?api_key=" + userName
+            let data = "GET /update?api_key=" + apiKey
             if (!isNaN(field1)) data = data + "&field1=" + field1
-            data = data + "&label=" + label + "&apikey=" + userName;
+            data = data + "&label=" + label + "&apikey=" + apiKey;
             data = data + " HTTP/1.1"
             data = data + "\u000D\u000A"
             data = data + "User-Agent: curl/7.58.0"
@@ -975,7 +975,7 @@ namespace grove {
      */
     //% block="Send Data to your IFTTT Event|Event %event|Key %key|value1 %value1|value2 %value2|value3 %value3"
     //% group="UartWiFi"
-    //% event.defl="Event"
+    //% event.defl="your Event"
     //% key.defl="your Key"
     //% value1.defl="hello"
     //% value2.defl="micro"
