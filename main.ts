@@ -975,7 +975,7 @@ namespace grove {
      */
     //% block="Send Data to your IFTTT Event|Event %event|Key %key|value1 %value1|value2 %value2|value3 %value3"
     //% group="UartWiFi"
-    //% event.defl="your Event"
+    //% event.defl="Event"
     //% key.defl="your Key"
     //% value1.defl="hello"
     //% value2.defl="micro"
