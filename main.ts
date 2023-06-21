@@ -754,7 +754,7 @@ namespace grove {
     /**
      * Check if Grove - Uart WiFi V2 is connected to Wifi
      */
-    //% block="Wifi OK or Not?"
+    //% block="Wifi OK?"
     //% group="UartWiFi"
     export function wifiOK() {
         return isWifiConnected
@@ -863,9 +863,9 @@ namespace grove {
     /**
      * Send data to Grafana with custom URL and port
      */
-    //% block="Schicke an Grafana Custom|Username %apiKey|URL %apiUrl|Port %apiPort|ID %label|Measurement %measurement|Field1 %field1|"
+    //% block="Schicke an Grafana Custom|API KEY %apiKey|Username %userName|URL %apiUrl|Port %apiPort|ID %label|Measurement %measurement|Field1 %field1|"
     //% group="UartWiFi"
-    export function sendToGrafana(userName: string, apiUrl:string, apiPort:string, label:string, measurement:Measurement, field1: number) {
+    export function sendToGrafana(apiKey: string, userName: string, apiUrl:string, apiPort:string, label:string, measurement:Measurement, field1: number) {
         let result = 0
         let retry = 2
 
@@ -882,7 +882,7 @@ namespace grove {
             result = waitAtResponse("OK", "ALREADY CONNECTED", "ERROR", 2000)
             if (result == 3) continue
 
-            let data = "GET /update?api_key=" + userName
+            let data = "GET /update?api_key=" + apiKey
             if (!isNaN(field1)) data = data + "&field1=" + field1
             data = data + "&label=" + label + "&username=" + userName + "&measurement="+ measurementToString(measurement);
             data = data + " HTTP/1.1"
@@ -925,7 +925,7 @@ namespace grove {
      */
     //% block="Schicke an Grafana with API Key|API KEY %apiKey|URL %apiUrl|Port %apiPort|ID %label|Field1 %field1|"
     //% group="UartWiFi"
-    //% apiKey.defl= "abcdefg"
+    //% apiKey.defl= "true"
     export function sendToGrafanaWithKey(apiKey: string, apiUrl:string, apiPort:string, label:string, field1: number) {
         let result = 0
         let retry = 2
