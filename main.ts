@@ -884,7 +884,7 @@ namespace grove {
 
             let data = "GET /update?api_key=" + apiKey
             if (!isNaN(field1)) data = data + "&field1=" + field1
-            data = data + "&label=" + label + "&username=" + userName + "&measurement="+ measurementToString(measurement) + "apiKey=" + apiKey;
+            data = data + "&label=" + label + "&username=" + userName + "&measurement="+ measurementToString(measurement) + "&apiKey=" + apiKey;
             data = data + " HTTP/1.1"
             data = data + "\u000D\u000A"
             data = data + "User-Agent: curl/7.58.0"
